@@ -3,7 +3,7 @@
         <meta charset="UTF-8" />
     </head>
     <body>
-        <h1>Version6</h1>
+        <h1>Version7</h1>
         <form name="login" method="post" action="index.php?action=login">
             <div>User name</div>
             <input type="text" name="name" />
