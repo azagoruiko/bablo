@@ -16,6 +16,18 @@ class UserController extends AbstractController {
     private $userService;
     private $incomeService;
     private $view;
+    
+    private $userId = null;
+    
+    public function getUserId() {
+        return $this->userId;
+    }
+
+    public function setUserId($userId) {
+        $this->userId = $userId;
+    }
+
+        
     public function getView() {
         return $this->view;
     }
@@ -71,10 +83,10 @@ class UserController extends AbstractController {
         if (empty($name) && empty($pass)) {
             require_once 'view/login.php';
         }
-        else if (FALSE !== ($view->user = $this->userService->authorize($name, $pass))) {
+        else if (FALSE !== ($this->view->user = $this->userService->authorize($name, $pass))) {
             //setcookie('id', $view->user->getId(), time()+60);
-            $_SESSION['id'] = $view->user->getId();
-            require_once 'view/showUser.php';
+            $_SESSION['id'] = $this->view->user->getId();
+            return 'showUser';
         } else {
             $view->error = "Login failed! You're a hacker!";
             require_once 'view/login.php';
@@ -90,5 +102,16 @@ class UserController extends AbstractController {
         $income->setUserid($_SESSION['id']);
         
         $this->incomeService->save($income);
+    }
+    
+    function incomes() {
+        $this->view->message = '';
+        if (empty($this->getUserId())) {
+            $this->view->message = 'you\'re not authorized, go away!';
+            $this->view->incomes = [];
+        } else {
+            $this->view->incomes = $this->incomeService->findAll($this->getUserId());
+        }
+        return 'incomes';
     }
 }

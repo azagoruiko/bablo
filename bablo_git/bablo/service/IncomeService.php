@@ -16,6 +16,6 @@ use bablo\model\Income;
  */
 interface IncomeService {
     function save(Income $income);
-    function findAll();
+    function findAll($userId);
     function find($id);
 }

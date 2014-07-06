@@ -21,8 +21,8 @@ class IncomeServiceImpl implements IncomeService {
         return $this->dao->find($id);
     }
 
-    public function findAll() {
-        return $this->dao->findAll();
+    public function findAll($userId) {
+        return $this->dao->findAll($userId);
     }
 
     public function save(Income $income) {

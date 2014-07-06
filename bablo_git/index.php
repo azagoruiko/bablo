@@ -5,19 +5,26 @@ require_once './autoload.php';
 require_once './config.php';
 
 use bablo\controller\UserController;
-use bablo\dao\CSVIncomeDAO;
-use bablo\dao\CSVUserDAO;
+use bablo\dao\MysqlIncomeDAO;
+use bablo\dao\MysqlUserDAO;
+use bablo\dao\MysqlConnection;
+use bablo\layout\Layout;
 use bablo\service\IncomeServiceImpl;
 use bablo\service\UserServiceImpl;
 
+MysqlConnection::$dbh = new PDO('mysql:host=' . Config::$dbhost . ';dbname=' .Config::$dbname, 
+        Config::$dbuser, 
+        Config::$dbpass);  
 $action = filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS);
 $ctrl = new UserController();
-$ctrl->setUserService(new UserServiceImpl(new CSVUserDAO()));
-$ctrl->setIncomeService(new IncomeServiceImpl(new CSVIncomeDAO()));
-$layout = new bablo\layout\Layout();
+$ctrl->setUserService(new UserServiceImpl(new MysqlUserDAO()));
+$ctrl->setIncomeService(new IncomeServiceImpl(new MysqlIncomeDAO()));
+if (isset($_SESSION['id'])) {
+    $ctrl->setUserId($_SESSION['id']);
+}
+$layout = new Layout();
 switch ($action) {
     case "showUser":
-        $ctrl->setRequestParam('id', empty(filter_input(INPUT_GET, 'id')) ? $_SESSION['id'] : filter_input(INPUT_GET, 'id'));
         $ctrl->setRequestParam('id', empty(filter_input(INPUT_GET, 'id')) ? $_SESSION['id'] : filter_input(INPUT_GET, 'id'));
         $viewName = $ctrl->showUser();
         $layout->setView($ctrl->getView());
@@ -32,7 +39,9 @@ switch ($action) {
     case "login" :
         $ctrl->setRequestParam('name', filter_input(INPUT_POST, 'name'));
         $ctrl->setRequestParam('pass', filter_input(INPUT_POST, 'pass'));
-        $ctrl->login();
+        $viewName = $ctrl->login();
+        $layout->setView($ctrl->getView());
+        $layout->render($viewName);
         break;
     case "addincome" :
         if (count($_POST) > 0) {
@@ -45,6 +54,12 @@ switch ($action) {
         break;
     case "newUser" :
         require_once 'view/editUser.php';
+        break;
+    case "incomes" :
+        $viewName = $ctrl->incomes();
+        
+        $layout->setView($ctrl->getView());
+        $layout->render($viewName);
         break;
     case "google" :
         echo '<h1>hello </h1>';

@@ -11,6 +11,6 @@ use bablo\model\Income;
  * @author andrii
  */
 interface IncomeDAO extends DAO{
-    function findAll();
+    function findAll($userId=0);
     function save(Income $income);
 }

@@ -13,6 +13,7 @@ class Income {
     private $userid;
     private $source;
     private $date;
+    
     public function getId() {
         return $this->id;
     }
@@ -60,7 +61,5 @@ class Income {
     public function setDate($date) {
         $this->date = $date;
     }
-
     
-
 }
