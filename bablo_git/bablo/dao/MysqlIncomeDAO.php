@@ -19,7 +19,15 @@ class MysqlIncomeDAO implements IncomeDAO {
     }
 
     public function save(\bablo\model\Income $income) {
-        
+        $stmt = MysqlConnection::$dbh->prepare("INSERT INTO income "
+                . "(date, amount, currency_id, user_id) "
+                . "values "
+                . "(:date, :amount, :currency_id, :user_id)");
+        $stmt->bindParam('user_id', $income->getUserid());
+        $stmt->bindParam('date', $income->getDate());
+        $stmt->bindParam('amount', $income->getAmount());
+        $stmt->bindParam('currency_id', $income->getCurrency_id());
+        return $stmt->execute();
     }
 
 }

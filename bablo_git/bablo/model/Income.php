@@ -13,7 +13,17 @@ class Income {
     private $userid;
     private $source;
     private $date;
+    private $currency_id;
     
+    public function getCurrency_id() {
+        return $this->currency_id;
+    }
+
+    public function setCurrency_id($currency_id) {
+        $this->currency_id = $currency_id;
+    }
+
+        
     public function getId() {
         return $this->id;
     }

@@ -1,9 +1,9 @@
 <?php
 namespace bablo\controller;
 
+use bablo\dao\CurrencyDAO;
 use bablo\model\Income;
 use bablo\model\User;
-use bablo\service\IncomeService;
 use bablo\service\UserService;
 use stdClass;
 
@@ -15,10 +15,20 @@ use stdClass;
 class UserController extends AbstractController {
     private $userService;
     private $incomeService;
+    private $currencyService;
     private $view;
     
     private $userId = null;
     
+    public function getCurrencyService() {
+        return $this->currencyService;
+    }
+
+    public function setCurrencyService(CurrencyDAO $currencyService) {
+        $this->currencyService = $currencyService;
+    }
+
+        
     public function getUserId() {
         return $this->userId;
     }
@@ -81,7 +91,7 @@ class UserController extends AbstractController {
         $name = $this->getRequestParam('name');
         $pass = $this->getRequestParam('pass');
         if (empty($name) && empty($pass)) {
-            require_once 'view/login.php';
+            return 'login';
         }
         else if (FALSE !== ($this->view->user = $this->userService->authorize($name, $pass))) {
             //setcookie('id', $view->user->getId(), time()+60);
@@ -89,19 +99,23 @@ class UserController extends AbstractController {
             return 'showUser';
         } else {
             $view->error = "Login failed! You're a hacker!";
-            require_once 'view/login.php';
+            return 'login';
         }
     }
     
-    function addIncome() {
+    function addIncome($add = true) {
         $income = new Income();
-        $income->setAmount($this->getRequestParam('amount'));
-        $income->setCurrency($this->getRequestParam('currency'));
-        $income->setDate($this->getRequestParam('date'));
-        $income->setSource($this->getRequestParam('source'));
-        $income->setUserid($_SESSION['id']);
-        
-        $this->incomeService->save($income);
+        if ($add) {
+            $income->setAmount($this->getRequestParam('amount'));
+            $income->setCurrency_id($this->getRequestParam('currency_id'));
+            $income->setDate($this->getRequestParam('date'));
+            $income->setSource($this->getRequestParam('source_id'));
+            $income->setUserid($_SESSION['id']);
+
+            $this->incomeService->save($income);
+        }
+        $this->view->currencies = $this->getCurrencyService()->findAll();
+        return 'editIncome';
     }
     
     function incomes() {
@@ -113,5 +127,8 @@ class UserController extends AbstractController {
             $this->view->incomes = $this->incomeService->findAll($this->getUserId());
         }
         return 'incomes';
+    }
+    function index() {
+        return 'index';
     }
 }

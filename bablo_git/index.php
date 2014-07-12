@@ -5,9 +5,10 @@ require_once './autoload.php';
 require_once './config.php';
 
 use bablo\controller\UserController;
+use bablo\dao\MysqlConnection;
+use bablo\dao\MysqlCurrencyDAO;
 use bablo\dao\MysqlIncomeDAO;
 use bablo\dao\MysqlUserDAO;
-use bablo\dao\MysqlConnection;
 use bablo\layout\Layout;
 use bablo\service\IncomeServiceImpl;
 use bablo\service\UserServiceImpl;
@@ -16,9 +17,13 @@ MysqlConnection::$dbh = new PDO('mysql:host=' . Config::$dbhost . ';dbname=' .Co
         Config::$dbuser, 
         Config::$dbpass);  
 $action = filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS);
+if (empty($action)) {
+    $action='index';
+}
 $ctrl = new UserController();
 $ctrl->setUserService(new UserServiceImpl(new MysqlUserDAO()));
 $ctrl->setIncomeService(new IncomeServiceImpl(new MysqlIncomeDAO()));
+$ctrl->setCurrencyService(new MysqlCurrencyDAO());
 if (isset($_SESSION['id'])) {
     $ctrl->setUserId($_SESSION['id']);
 }
@@ -43,20 +48,29 @@ switch ($action) {
         $layout->setView($ctrl->getView());
         $layout->render($viewName);
         break;
-    case "addincome" :
+    case "addIncome" :
         if (count($_POST) > 0) {
-            foreach (['amount', 'currency', 'date', 'source', 'user_id'] as $key) {
+            foreach (['amount', 'currency_id', 'date', 'source_id', 'user_id'] as $key) {
                 $ctrl->setRequestParam($key, filter_input(INPUT_POST, $key));
             }
-            $ctrl->addIncome();
+            $viewName = $ctrl->addIncome();
+        } else {
+            $viewName = $ctrl->addIncome(false);
         }
-        require_once 'view/editIncome.php';
+        $layout->setView($ctrl->getView());
+        $layout->render($viewName);
         break;
     case "newUser" :
         require_once 'view/editUser.php';
         break;
     case "incomes" :
         $viewName = $ctrl->incomes();
+        
+        $layout->setView($ctrl->getView());
+        $layout->render($viewName);
+        break;
+    case "index" :
+        $viewName = $ctrl->index();
         
         $layout->setView($ctrl->getView());
         $layout->render($viewName);
