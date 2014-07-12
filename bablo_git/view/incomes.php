@@ -12,6 +12,7 @@
     </select>
     <input type="submit"/>
 </form>
+<div>Selected month: <?php echo $this->view->months[$this->view->selectedMonth];?></div>
 <table>
 <?php
     foreach ($this->view->incomes as $income) {
