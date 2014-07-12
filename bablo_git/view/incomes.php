@@ -1,9 +1,13 @@
 <form method="post" action="">
     <select name="months">
         <?php
+            $selected = '';
             foreach ($this->view->months as $key=>$value){
-                echo "<option value=\"$key\">$value</option>";
+                if ($this->view->selectedMonth==$key){$selected=' selected';}
+                echo "<option$selected value=\"$key\">$value</option>";
+                $selected='';
             }
+            
         ?>
     </select>
     <input type="submit"/>

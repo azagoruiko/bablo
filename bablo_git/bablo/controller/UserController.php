@@ -132,6 +132,7 @@ class UserController extends AbstractController {
             }
             $this->view->incomes = $this->incomeService->findAll($this->getUserId(), $month, $year);
             $this->view->months = array();
+            $this->view->selectedMonth = $this->getRequestParam('month');
             $today = date ('Y,m');
             list($year, $month)=explode(',', $today);
             for ($i=0; $i<=12; $i++){
