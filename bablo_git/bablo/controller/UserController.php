@@ -124,7 +124,13 @@ class UserController extends AbstractController {
             $this->view->message = 'you\'re not authorized, go away!';
             $this->view->incomes = [];
         } else {
-            $this->view->incomes = $this->incomeService->findAll($this->getUserId());
+            $month = $this->getRequestParam('month');
+            if (empty($month)) {
+                list($month, $year) = [null, null];
+            } else {
+                list($month, $year) = explode(',', $this->getRequestParam('month'));
+            }
+            $this->view->incomes = $this->incomeService->findAll($this->getUserId(), $month, $year);
             $this->view->months = array();
             $today = date ('Y,m');
             list($year, $month)=explode(',', $today);

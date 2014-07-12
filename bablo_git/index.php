@@ -64,6 +64,7 @@ switch ($action) {
         require_once 'view/editUser.php';
         break;
     case "incomes" :
+        $ctrl->setRequestParam('month', filter_input(INPUT_POST, 'months'));
         $viewName = $ctrl->incomes();
         
         $layout->setView($ctrl->getView());
