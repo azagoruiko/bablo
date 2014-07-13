@@ -11,6 +11,7 @@
                 <li><a href="?action=addIncome">Добавить бабла</a></li>
                 <li><a href="?action=login">Войти</a></li>
                 <li><a href="?action=incomes">Бабло</a></li>
+                <li><a href="?action=expence">Траты</a></li>
             </ul>
         </menu>
         <header>

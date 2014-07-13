@@ -2,6 +2,8 @@
 namespace bablo\controller;
 
 use bablo\dao\CurrencyDAO;
+use bablo\dao\ExpenceDAO;
+use bablo\model\Expence;
 use bablo\model\Income;
 use bablo\model\User;
 use bablo\service\UserService;
@@ -17,6 +19,7 @@ class UserController extends AbstractController {
     private $incomeService;
     private $currencyService;
     private $view;
+    private $expenceService;
     
     private $userId = null;
     
@@ -27,8 +30,15 @@ class UserController extends AbstractController {
     public function setCurrencyService(CurrencyDAO $currencyService) {
         $this->currencyService = $currencyService;
     }
+    public function getExpenceService() {
+        return $this->expenceService;
+    }
 
-        
+    public function setExpenceService(ExpenceDAO $expenceService) {
+        $this->expenceService = $expenceService;
+    }
+
+            
     public function getUserId() {
         return $this->userId;
     }
@@ -146,6 +156,51 @@ class UserController extends AbstractController {
         }
         return 'incomes';
     }
+    
+    function addExpence($add = true) {
+        $expence = new Expence();
+        if ($add) {
+            $expence->setAmount($this->getRequestParam('amount'));
+            $expence->setCurrency_id($this->getRequestParam('currency_id'));
+            $expence->setDate($this->getRequestParam('date'));
+            $expence->setSource($this->getRequestParam('source_id'));
+            $expence->setUserid($_SESSION['id']);
+
+            $this->expenceService->save($expence);
+        }
+        $this->view->currencies = $this->getCurrencyService()->findAll();
+        return 'editExpence';
+    }
+    
+    function expences() {
+        $this->view->message = '';
+        if (empty($this->getUserId())) {
+            $this->view->message = 'you\'re not authorized, go away!';
+            $this->view->expences = [];
+        } else {
+            $month = $this->getRequestParam('month');
+            if (empty($month)) {
+                list($month, $year) = [null, null];
+            } else {
+                list($month, $year) = explode(',', $this->getRequestParam('month'));
+            }
+            $this->view->expences = $this->expenceService->findAll($this->getUserId(), $month, $year);
+            $this->view->months = array();
+            $this->view->selectedMonth = $this->getRequestParam('month');
+            $today = date ('Y,m');
+            list($year, $month)=explode(',', $today);
+            for ($i=0; $i<=12; $i++){
+                $this->view->months["$month,$year"]=date("M", mktime(0, 0, 0, $month, 1, $year))." $year";
+                $month--;
+                if ($month==0) {
+                    $month=12;
+                    $year--;
+                }
+            }   
+        }
+        return 'expences';
+    }
+    
     function index() {
         return 'index';
     }

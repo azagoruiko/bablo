@@ -24,6 +24,7 @@ $ctrl = new UserController();
 $ctrl->setUserService(new UserServiceImpl(new MysqlUserDAO()));
 $ctrl->setIncomeService(new IncomeServiceImpl(new MysqlIncomeDAO()));
 $ctrl->setCurrencyService(new MysqlCurrencyDAO());
+$ctrl->setExpenceService(new bablo\dao\MysqlExpenceDAO());
 if (isset($_SESSION['id'])) {
     $ctrl->setUserId($_SESSION['id']);
 }
@@ -63,9 +64,28 @@ switch ($action) {
     case "newUser" :
         require_once 'view/editUser.php';
         break;
+    case "addExpence" :
+        if (count($_POST) > 0) {
+            foreach (['amount', 'currency_id', 'date', 'source_id', 'user_id'] as $key) {
+                $ctrl->setRequestParam($key, filter_input(INPUT_POST, $key));
+            }
+            $viewName = $ctrl->addExpence();
+        } else {
+            $viewName = $ctrl->addExpence(false);
+        }
+        $layout->setView($ctrl->getView());
+        $layout->render($viewName);
+        break;
     case "incomes" :
         $ctrl->setRequestParam('month', filter_input(INPUT_POST, 'months'));
         $viewName = $ctrl->incomes();
+        
+        $layout->setView($ctrl->getView());
+        $layout->render($viewName);
+        break;
+    case "expences" :
+        $ctrl->setRequestParam('month', filter_input(INPUT_POST, 'months'));
+        $viewName = $ctrl->expences();
         
         $layout->setView($ctrl->getView());
         $layout->render($viewName);
