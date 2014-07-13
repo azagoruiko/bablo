@@ -6,11 +6,11 @@
     <body>
         <menu>
             <ul>
-                <li><a href="/">Главная</a></li>
-                <li><a href="/?action=showUser">Юзер</a></li>
-                <li><a href="/?action=addIncome">Добавить бабла</a></li>
-                <li><a href="/?action=login">Войти</a></li>
-                <li><a href="/?action=incomes">Бабло</a></li>
+                <li><a href="">Главная</a></li>
+                <li><a href="?action=showUser">Юзер</a></li>
+                <li><a href="?action=addIncome">Добавить бабла</a></li>
+                <li><a href="?action=login">Войти</a></li>
+                <li><a href="?action=incomes">Бабло</a></li>
             </ul>
         </menu>
         <header>
