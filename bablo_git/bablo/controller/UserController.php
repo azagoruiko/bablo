@@ -128,34 +128,47 @@ class UserController extends AbstractController {
         return 'editIncome';
     }
     
-    function incomes() {
-        $this->view->message = '';
-        if (empty($this->getUserId())) {
-            $this->view->message = 'you\'re not authorized, go away!';
-            $this->view->incomes = [];
-        } else {
-            $month = $this->getRequestParam('month');
-            if (empty($month)) {
-                list($month, $year) = [null, null];
-            } else {
-                list($month, $year) = explode(',', $this->getRequestParam('month'));
-            }
-            $this->view->incomes = $this->incomeService->findAll($this->getUserId(), $month, $year);
-            $this->view->months = array();
-            $this->view->selectedMonth = $this->getRequestParam('month');
-            $today = date ('Y,m');
-            list($year, $month)=explode(',', $today);
-            for ($i=0; $i<=12; $i++){
-                $this->view->months["$month,$year"]=date("M", mktime(0, 0, 0, $month, 1, $year))." $year";
-                $month--;
-                if ($month==0) {
-                    $month=12;
-                    $year--;
-                }
-            }   
+    private function getSelectedMonth($year, $month) {
+        $selectedMonth = $this->getRequestParam('month');
+        if (empty($selectedMonth)) {
+            $selectedMonth = implode(',', [$month, $year]);
         }
-        return 'incomes';
+        return $selectedMonth;
     }
+    
+    private function getMonthArray($year, $month) {
+        $months = [];
+        for ($i=0; $i<=12; $i++){
+            $months["$month,$year"]=date("M", mktime(0, 0, 0, $month, 1, $year))." $year";
+            $month--;
+            if ($month==0) {
+                $month=12;
+                $year--;
+            }
+        }
+        return $months;
+    }
+    
+    private function getSelectedYearMonth() {
+        $month = $this->getRequestParam('month');
+        if (empty($month)) {
+            return [null, null];
+        } else {
+            return explode(',', $this->getRequestParam('month'));
+        }
+    }
+    
+    private function getTodayYearMonth() {
+        $today = date ('Y,m');
+        return explode(',', $today);
+    }
+    
+    private function prepareMoneyReportForm() {
+        list($year, $month)=$this->getTodayYearMonth();
+        $this->view->selectedMonth = $this->getSelectedMonth($year, $month);
+        $this->view->months = $this->getMonthArray($year, $month);
+    }
+    
     
     function addExpence($add = true) {
         $expence = new Expence();
@@ -172,31 +185,29 @@ class UserController extends AbstractController {
         return 'editExpence';
     }
     
+    function incomes() {
+        $this->view->message = '';
+        if (empty($this->getUserId())) {
+            $this->view->message = 'you\'re not authorized, go away!';
+            $this->view->incomes = [];
+        } else {
+            list($month, $year)=$this->getSelectedYearMonth();
+            $this->view->incomes = $this->incomeService->findAll($this->getUserId(), $month, $year);
+            $this->prepareMoneyReportForm();
+        }
+        return 'incomes';
+    }
+    
+    
     function expences() {
         $this->view->message = '';
         if (empty($this->getUserId())) {
             $this->view->message = 'you\'re not authorized, go away!';
             $this->view->expences = [];
         } else {
-            $month = $this->getRequestParam('month');
-            if (empty($month)) {
-                list($month, $year) = [null, null];
-            } else {
-                list($month, $year) = explode(',', $this->getRequestParam('month'));
-            }
+            list($month, $year)=$this->getSelectedYearMonth();
             $this->view->expences = $this->expenceService->findAll($this->getUserId(), $month, $year);
-            $this->view->months = array();
-            $this->view->selectedMonth = $this->getRequestParam('month');
-            $today = date ('Y,m');
-            list($year, $month)=explode(',', $today);
-            for ($i=0; $i<=12; $i++){
-                $this->view->months["$month,$year"]=date("M", mktime(0, 0, 0, $month, 1, $year))." $year";
-                $month--;
-                if ($month==0) {
-                    $month=12;
-                    $year--;
-                }
-            }   
+            $this->prepareMoneyReportForm();
         }
         return 'expences';
     }
