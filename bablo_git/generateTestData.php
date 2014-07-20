@@ -5,8 +5,11 @@ require_once './config.php';
 
 use bablo\dao\MysqlConnection;
 use bablo\dao\MysqlCurrencyDAO;
+use bablo\dao\MysqlExpenceDAO;
 use bablo\dao\MysqlIncomeDAO;
 use bablo\dao\MysqlUserDAO;
+use bablo\model\Expence;
+use bablo\model\Income;
 use bablo\service\IncomeServiceImpl;
 use bablo\service\UserServiceImpl;
 
@@ -19,7 +22,7 @@ $ctrl = new stdClass();
 $ctrl->userService = new UserServiceImpl(new MysqlUserDAO());
 $ctrl->incomeService = new IncomeServiceImpl(new MysqlIncomeDAO());
 $ctrl->currencyService = new MysqlCurrencyDAO();
-$ctrl->expenceService = new bablo\dao\MysqlExpenceDAO();
+$ctrl->expenceService = new MysqlExpenceDAO();
 
 
 $date1 = date ("d.m.Y");
@@ -35,7 +38,7 @@ for ($i = $time1; $i >= $time2; $i-=24*60*60) {
     $timesGot = rand(2,4);
     
     for ($j=1; $j<=$timesGot; $j++){
-        $income = new \bablo\model\Income();
+        $income = new Income();
 
         $amount = rand(30,60)*10;
         $income->setAmount($amount);
@@ -57,7 +60,7 @@ for ($i = $time1; $i >= $time2; $i-=24*60*60) {
     $timesSpent = rand(2,3);
     
     for ($j=1; $j<=$timesSpent; $j++){
-        $expence = new \bablo\model\Expence();
+        $expence = new Expence();
 
         $amount = rand(5,50)*10;
         $expence->setAmount($amount);
