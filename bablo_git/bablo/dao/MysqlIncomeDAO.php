@@ -20,7 +20,8 @@ class MysqlIncomeDAO implements IncomeDAO {
                 . "join rate r "
                 . "on r.id=c.id and r.date=(select MAX(rate.date) as d from rate) "
                 . "where i.user_id=:user_id "
-                . "and i.date between :date_from and :date_to");
+                . "and i.date between :date_from and :date_to "
+                . "order by i.date");
         $stmt->bindParam('user_id', $userId);
         $stmt->bindParam('date_from', $dateFrom);
         $stmt->bindParam('date_to', $dateTo);

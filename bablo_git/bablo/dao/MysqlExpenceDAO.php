@@ -33,7 +33,8 @@ class MysqlExpenceDAO implements ExpenceDAO {
                 . "join rate r "
                 . "on r.id=c.id and r.date=(select MAX(rate.date) as d from rate) "
                 . "where e.user_id=:user_id "
-                . "and e.date between :date_from and :date_to");
+                . "and e.date between :date_from and :date_to "
+                . "order by e.date");
         $stmt->bindParam('user_id', $userId);
         $stmt->bindParam('date_from', $dateFrom);
         $stmt->bindParam('date_to', $dateTo);
