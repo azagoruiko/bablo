@@ -229,6 +229,19 @@ class UserController extends AbstractController {
         return 'balance';
     }
     
+    function sumary() {
+        $this->view->message = '';
+        if (empty($this->getUserId())) {
+            $this->view->message = 'you\'re not authorized, go away!';
+            $this->view->sumary = [];
+        } else {
+            list($month, $year)=$this->getSelectedYearMonth();
+            $this->view->sumary = $this->incomeService->getSumary ($this->getUserId(), $month, $year);
+            $this->prepareMoneyReportForm();
+        }
+        return 'sumary';
+    }
+    
     function index() {
         return 'index';
     }

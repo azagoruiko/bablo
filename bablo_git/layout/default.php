@@ -13,6 +13,7 @@
                 <li><a href="?action=incomes">Бабло</a></li>
                 <li><a href="?action=expences">Траты</a></li>
                 <li><a href="?action=balance">Баланс</a></li>
+                <li><a href="?action=sumary">Sumary</a></li>
             </ul>
         </menu>
         <header>
