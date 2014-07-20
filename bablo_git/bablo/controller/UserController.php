@@ -16,6 +16,10 @@ use stdClass;
  */
 class UserController extends AbstractController {
     private $userService;
+    /**
+     *
+     * @var \bablo\service\IncomeServiceImpl
+     */
     private $incomeService;
     private $currencyService;
     private $view;
@@ -210,6 +214,19 @@ class UserController extends AbstractController {
             $this->prepareMoneyReportForm();
         }
         return 'expences';
+    }
+    
+    function balance() {
+        $this->view->message = '';
+        if (empty($this->getUserId())) {
+            $this->view->message = 'you\'re not authorized, go away!';
+            $this->view->balance = [];
+        } else {
+            list($month, $year)=$this->getSelectedYearMonth();
+            $this->view->balance = $this->incomeService->getCombinedReport ($this->getUserId(), $month, $year);
+            $this->prepareMoneyReportForm();
+        }
+        return 'balance';
     }
     
     function index() {

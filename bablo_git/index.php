@@ -90,6 +90,13 @@ switch ($action) {
         $layout->setView($ctrl->getView());
         $layout->render($viewName);
         break;
+    case "balance" :
+        $ctrl->setRequestParam('month', filter_input(INPUT_POST, 'months'));
+        $viewName = $ctrl->balance();
+        
+        $layout->setView($ctrl->getView());
+        $layout->render($viewName);
+        break;
     case "index" :
         $viewName = $ctrl->index();
         
