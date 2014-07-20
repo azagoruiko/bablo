@@ -3,12 +3,10 @@
 require_once './autoload.php';
 require_once './config.php';
 
-use bablo\controller\UserController;
 use bablo\dao\MysqlConnection;
 use bablo\dao\MysqlCurrencyDAO;
 use bablo\dao\MysqlIncomeDAO;
 use bablo\dao\MysqlUserDAO;
-use bablo\layout\Layout;
 use bablo\service\IncomeServiceImpl;
 use bablo\service\UserServiceImpl;
 
@@ -33,43 +31,49 @@ list($d,$m,$y) = explode(".",$date2);
 $time2 = mktime(0,0,0,$m,$d,$y);
 
 for ($i = $time1; $i >= $time2; $i-=24*60*60) {
+   
+    $timesGot = rand(2,4);
     
-    $income = new \bablo\model\Income();
-        
+    for ($j=1; $j<=$timesGot; $j++){
+        $income = new \bablo\model\Income();
+
         $amount = rand(30,60)*10;
         $income->setAmount($amount);
-       
+
         $curency = rand(1,3);
         $income->setCurrency_id($curency);
-       
+
         $date = date ("Y-m-d", $i);
         $income->setDate($date);
-       
+
         $source_id = "something";
         $income->setSource($source_id);
-        
+
         $income->setUserid(3);
-        
-        print_r($income);
-        
+
         $ctrl->incomeService->save($income);
+    }
     
-    $expence = new \bablo\model\Expence();
-        
+    $timesSpent = rand(2,3);
+    
+    for ($j=1; $j<=$timesSpent; $j++){
+        $expence = new \bablo\model\Expence();
+
         $amount = rand(5,50)*10;
         $expence->setAmount($amount);
-       
+
         $curency = rand(1,3);
         $expence->setCurrency_id($curency);
-        
+
         $date = date ("Y-m-d", $i);
         $expence->setDate($date);
-       
+
         $source_id = "something";
         $expence->setSource($source_id);
-        
+
         $expence->setUserid(3);
 
         $ctrl->expenceService->save($expence);
+    }
+        
 }
-
