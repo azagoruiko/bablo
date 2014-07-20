@@ -12,6 +12,7 @@
                 <li><a href="?action=login">Войти</a></li>
                 <li><a href="?action=incomes">Бабло</a></li>
                 <li><a href="?action=expences">Траты</a></li>
+                <li><a href="?action=balance">Баланс</a></li>
             </ul>
         </menu>
         <header>
