@@ -25,7 +25,6 @@ class MysqlExpenceDAO implements ExpenceDAO {
             list($month, $year) = explode(',', date('m,Y'));
         }
         $dateFrom = date('Y-m-d', mktime(0,0,0,$month, 1, $year));
-        $dateTo = date('Y-m-d', mktime(0,0,0,++$month, 1, $year));
         $stmt = MysqlConnection::$dbh->prepare("SELECT e.*, c.name as currency, (e.amount*rate) as usdAmount "
                 . "from expence e "
                 . "join currency c "
@@ -33,11 +32,10 @@ class MysqlExpenceDAO implements ExpenceDAO {
                 . "join rate r "
                 . "on r.id=c.id and r.date=(select MAX(rate.date) as d from rate) "
                 . "where e.user_id=:user_id "
-                . "and e.date between :date_from and :date_to "
+                . "and e.date between :date_from and LAST_DAY(:date_from) "
                 . "order by e.date");
         $stmt->bindParam('user_id', $userId);
         $stmt->bindParam('date_from', $dateFrom);
-        $stmt->bindParam('date_to', $dateTo);
         $stmt->execute();
         $expences = [];
         while ($expence = $stmt->fetchObject('\bablo\model\Expence')) {

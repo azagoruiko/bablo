@@ -12,7 +12,6 @@ class MysqlIncomeDAO implements IncomeDAO {
             list($month, $year) = explode(',', date('m,Y'));
         }
         $dateFrom = date('Y-m-d', mktime(0,0,0,$month, 1, $year));
-        $dateTo = date('Y-m-d', mktime(0,0,0,++$month, 1, $year));
         $stmt = MysqlConnection::$dbh->prepare("SELECT i.*, c.name as currency, (i.amount*rate) as usdAmount "
                 . "from income i "
                 . "join currency c "
@@ -20,11 +19,10 @@ class MysqlIncomeDAO implements IncomeDAO {
                 . "join rate r "
                 . "on r.id=c.id and r.date=(select MAX(rate.date) as d from rate) "
                 . "where i.user_id=:user_id "
-                . "and i.date between :date_from and :date_to "
+                . "and i.date between :date_from and LAST_DAY(:date_from) "
                 . "order by i.date");
         $stmt->bindParam('user_id', $userId);
         $stmt->bindParam('date_from', $dateFrom);
-        $stmt->bindParam('date_to', $dateTo);
         $stmt->execute();
         $incomes = [];
         while ($income = $stmt->fetchObject('\bablo\model\Income')) {
@@ -48,7 +46,7 @@ class MysqlIncomeDAO implements IncomeDAO {
                 . "join rate r "
                 . "on r.id=c.id and r.date=(select MAX(rate.date) as d from rate) "
                 . "where e.user_id=:user_id "
-                . "and e.date between :date_from and :date_to) "
+                . "and e.date between :date_from and LAST_DAY(:date_from)) "
 
                 ."UNION "
 
@@ -59,7 +57,7 @@ class MysqlIncomeDAO implements IncomeDAO {
                 . "join rate r "
                 . "on r.id=c.id and r.date=(select MAX(rate.date) as d from rate) "
                 . "where i.user_id=:user_id "
-                . "and i.date between :date_from and :date_to) "
+                . "and i.date between :date_from and LAST_DAY(:date_from)) "
                 . ") as balanceTable "
                 . "order by date "
                 );
