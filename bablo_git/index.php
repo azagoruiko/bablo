@@ -97,6 +97,13 @@ switch ($action) {
         $layout->setView($ctrl->getView());
         $layout->render($viewName);
         break;
+    case "sumary" :
+        $ctrl->setRequestParam('month', filter_input(INPUT_POST, 'months'));
+        $viewName = $ctrl->sumary();
+        
+        $layout->setView($ctrl->getView());
+        $layout->render($viewName);
+        break;
     case "index" :
         $viewName = $ctrl->index();
         

@@ -28,6 +28,10 @@ class IncomeServiceImpl implements IncomeService {
     public function getCombinedReport ($userId, $month=null, $year=null) {
             return $this->dao->getCombinedReport($userId, $month, $year);
     }
+    
+    public function getSumary ($userId, $month=null, $year=null) {
+            return $this->dao->getSumary($userId, $month, $year);
+    }
         
     public function save(Income $income) {
         return $this->dao->save($income);
