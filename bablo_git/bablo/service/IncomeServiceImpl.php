@@ -33,5 +33,9 @@ class IncomeServiceImpl implements IncomeService {
         return $this->dao->save($income);
     }
 
+    public function getUpdates($userId = 0, $lastId=0) {
+        return $this->dao->getUpdates($userId, $lastId);
+    }
+
 //put your code here
 }

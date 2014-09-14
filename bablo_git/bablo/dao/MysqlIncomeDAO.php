@@ -30,6 +30,25 @@ class MysqlIncomeDAO implements IncomeDAO {
         }
         return $incomes;
     }
+    
+    public function getUpdates($userId=0, $lastId=0) {
+        $stmt = MysqlConnection::$dbh->prepare("SELECT i.*, c.name as currency, (i.amount*rate) as usdAmount "
+                . "from income i "
+                . "join currency c "
+                . "on i.currency_id=c.id "
+                . "join rate r "
+                . "on r.id=c.id and r.date=(select MAX(rate.date) as d from rate) "
+                . "where i.user_id=:user_id and i.id > :last_id "
+                . "order by i.date");
+        $stmt->bindParam('user_id', $userId);
+        $stmt->bindParam('last_id', intval($lastId));
+        $stmt->execute();
+        $incomes = [];
+        while ($income = $stmt->fetchObject('\bablo\model\Income')) {
+            $incomes[] = $income;
+        }
+        return $incomes;
+    }
 
     public function getCombinedReport ($userId=0, $month=null, $year=null){
         if (empty($month) || empty($year)) {

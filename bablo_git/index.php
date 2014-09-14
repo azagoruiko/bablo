@@ -101,12 +101,20 @@ switch ($action) {
         $viewName = $ctrl->index();
         
         $layout->setView($ctrl->getView());
+        
         $layout->render($viewName);
         break;
     case "google" :
         echo '<h1>hello </h1>';
         flush();
         header('location: http://www.google.com/');
+        break;
+    case "getIncomeUpdates":
+        $ctrl->setRequestParam('since', filter_input(INPUT_GET, 'since'));
+        $viewName = $ctrl->getIncomeUpdates();
+        $layout->setView($ctrl->getView());
+        $layout->setDisableLayout(1);
+        $layout->render($viewName);
         break;
     default :
         http_response_code(404);

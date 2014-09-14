@@ -13,7 +13,16 @@
     <input type="submit"/>
 </form>
 <div>Selected month: <?php echo $this->view->months[$this->view->selectedMonth];?></div>
-<table>
+<table id="incomes_table" class="table table-striped table-bordered table-condensed">
+    <tr>
+        <th>ID</th>
+        <th>Date</th>
+        <th>Amount</th>
+        <th>Currency</th>
+        <th>USD Amount</th>
+        
+        
+    </tr>
 <?php
     $usdAmount=0;
     
@@ -30,5 +39,6 @@
     
 ?>
 </table>
+<div id="new_content"></div>
 <div>Total USD Amount: <?php echo round($usdAmount,2);?></div>
 <div style="color:red;"><?php echo $this->view->message; ?></div>

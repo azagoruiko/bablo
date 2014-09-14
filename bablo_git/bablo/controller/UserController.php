@@ -232,4 +232,9 @@ class UserController extends AbstractController {
     function index() {
         return 'index';
     }
+    
+    function getIncomeUpdates() {
+        $this->view->updates = $this->incomeService->getUpdates($this->getUserId(), $this->getRequestParam('since'));
+        return 'income_updates';
+    }
 }

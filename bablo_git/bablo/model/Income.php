@@ -41,7 +41,7 @@ class Income {
         $this->id = $id;
     }
 
-        public function getAmount() {
+    public function getAmount() {
         return $this->amount;
     }
 

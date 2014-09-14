@@ -10,6 +10,17 @@ class Layout {
     private $layoutName='default';
     private $viewName;
     private $view;
+    
+    private $disableLayout = 0;
+    
+    public function getDisableLayout() {
+        return $this->disableLayout;
+    }
+
+    public function setDisableLayout($disableLayout) {
+        $this->disableLayout = $disableLayout;
+    }
+    
     public function getView() {
         return $this->view;
     }
@@ -27,12 +38,16 @@ class Layout {
     }
 
     public function render($viewName){
-        $fileName = "layout/{$this->layoutName}.php";
-        if (!file_exists($fileName)){
-            throw new \RuntimeException('Нэту такого файла!');
+        if ($this->disableLayout) {
+            require "view/$viewName.php";
+        } else {
+            $fileName = "layout/{$this->layoutName}.php";
+            if (!file_exists($fileName)){
+                throw new \RuntimeException('Нэту такого файла!');
+            }
+            $this->viewName = $viewName;
+            require $fileName;
         }
-        $this->viewName = $viewName;
-        require $fileName;
     }
     public function view() {
         $fileName = "view/{$this->viewName}.php";

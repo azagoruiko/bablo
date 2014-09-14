@@ -18,4 +18,5 @@ interface IncomeService {
     function save(Income $income);
     function findAll($userId, $month=null, $year=null);
     function find($id);
+    public function getUpdates($userId=0, $lastId=0);
 }
