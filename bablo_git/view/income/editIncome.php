@@ -15,8 +15,9 @@
                     ?>
                 </select>
             </div>
-            <div class="input-group">
-                <div>Date:</div><input class="form-control"  type="date" name="date" />
+            <div class="input-group has-error">
+                <div>Date:</div>
+                <input class="form-control"  type="date" name="date" />
             </div>
             <div class="input-group">
                 <div>Source:</div><select class="form-control"  multiple="true" name="source_id">
@@ -37,3 +38,4 @@
         <div id="messages" class="text-danger border-danger"></div>
     </div>
 </div>
+<script src="js/main.js"></script>

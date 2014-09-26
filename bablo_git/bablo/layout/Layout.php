@@ -10,7 +10,23 @@ class Layout {
     private $layoutName='default';
     private $viewName;
     private $view;
+    private $ctrlName;
     
+    public function getViewName() {
+        return $this->viewName;
+    }
+
+    public function getCtrlName() {
+        return $this->ctrlName;
+    }
+
+    public function setViewName($viewName) {
+        $this->viewName = $viewName;
+    }
+
+    public function setCtrlName($ctrlName) {
+        $this->ctrlName = $ctrlName;
+    }    
     private $disableLayout = 0;
     
     public function getDisableLayout() {
@@ -50,7 +66,7 @@ class Layout {
         }
     }
     public function view() {
-        $fileName = "view/{$this->viewName}.php";
+        $fileName = "view/{$this->ctrlName}/{$this->viewName}.php";
         require $fileName;
     }
 }

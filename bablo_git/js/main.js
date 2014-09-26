@@ -10,6 +10,7 @@ function setErrorField(field, error)  {
 function clearForm(errorBox) {
     errorBox.innerHTML = "<div></div>";
     var allFields = document.getElementById('addIncome').getElementsByTagName('input');
+    //allFields.insertAfter(document.getElementsByName('source_id'));
     for (var i=0; i< allFields.length; i++) {
         setErrorField(allFields[i], false);
     }
@@ -29,12 +30,13 @@ function setErrorState(errorFields, errors, errorBox) {
 }
 
 var sinceWhen = 1485;
+var ajaxInProgress = false;
 
 function getIncomeUpdates() {
     var ajax = new window.XMLHttpRequest;
     ajax.open('GET', 'index.php?action=getIncomeUpdates&since=' + sinceWhen, true);
     ajax.onreadystatechange = function() {
-        if (ajax.readyState == 4 && ajax.status == 200) {
+        if (ajax.readyState == 4 && ajax.status == 200 && !ajaxInProgress) {
             document.getElementById('incomes_table').innerHTML += ajax.responseText;
             // поиск максимального id
             var trs = document.getElementById('incomes_table').getElementsByTagName('tr');
@@ -43,8 +45,10 @@ function getIncomeUpdates() {
                     sinceWhen = Number(trs[i].children[0].innerHTML);
                 }
             }
+            ajaxInProgress = false;
         }
     };
+    ajaxInProgress = true;
     ajax.send();
     
     

@@ -9,6 +9,7 @@
 namespace bablo\dao;
 
 use bablo\model\Expence;
+use bablo\util\MySQL;
 
 /**
  * Description of MysqlExpenceDAO
@@ -25,7 +26,7 @@ class MysqlExpenceDAO implements ExpenceDAO {
             list($month, $year) = explode(',', date('m,Y'));
         }
         $dateFrom = date('Y-m-d', mktime(0,0,0,$month, 1, $year));
-        $stmt = MysqlConnection::$dbh->prepare("SELECT e.*, c.name as currency, (e.amount*rate) as usdAmount "
+        $stmt = MySQL::$db->prepare("SELECT e.*, c.name as currency, (e.amount*rate) as usdAmount "
                 . "from expence e "
                 . "join currency c "
                 . "on e.currency_id=c.id "
@@ -45,7 +46,7 @@ class MysqlExpenceDAO implements ExpenceDAO {
     }
 
     public function save(Expence $income) {
-        $stmt = MysqlConnection::$dbh->prepare("INSERT INTO expence "
+        $stmt = MySQL::$db->prepare("INSERT INTO expence "
                 . "(date, amount, currency_id, user_id) "
                 . "values "
                 . "(:date, :amount, :currency_id, :user_id)");

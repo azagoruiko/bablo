@@ -2,6 +2,10 @@
 
 namespace bablo\dao;
 
+use bablo\model\Income;
+use bablo\util\MySQL;
+use PDO;
+
 class MysqlIncomeDAO implements IncomeDAO {
     public function find($id) {
         
@@ -12,7 +16,7 @@ class MysqlIncomeDAO implements IncomeDAO {
             list($month, $year) = explode(',', date('m,Y'));
         }
         $dateFrom = date('Y-m-d', mktime(0,0,0,$month, 1, $year));
-        $stmt = MysqlConnection::$dbh->prepare("SELECT i.*, c.name as currency, (i.amount*rate) as usdAmount "
+        $stmt = MySQL::$db->prepare("SELECT i.*, c.name as currency, (i.amount*rate) as usdAmount "
                 . "from income i "
                 . "join currency c "
                 . "on i.currency_id=c.id "
@@ -32,7 +36,7 @@ class MysqlIncomeDAO implements IncomeDAO {
     }
     
     public function getUpdates($userId=0, $lastId=0) {
-        $stmt = MysqlConnection::$dbh->prepare("SELECT i.*, c.name as currency, (i.amount*rate) as usdAmount "
+        $stmt = MySQL::$db->prepare("SELECT i.*, c.name as currency, (i.amount*rate) as usdAmount "
                 . "from income i "
                 . "join currency c "
                 . "on i.currency_id=c.id "
@@ -56,7 +60,7 @@ class MysqlIncomeDAO implements IncomeDAO {
         }
         $dateFrom = date('Y-m-d', mktime(0,0,0,$month, 1, $year));
         $dateTo = date('Y-m-d', mktime(0,0,0,++$month, 1, $year));
-        $stmt = MysqlConnection::$dbh->prepare(
+        $stmt = MySQL::$db->prepare(
                 "select type, balance, user_id, date, currency, usdAmount from ("
                 . "(SELECT 1 as type, e.amount*-1 as balance, e.user_id, e.date, c.name as currency, (e.amount*rate*-1) as usdAmount "
                 . "from expence e "
@@ -85,7 +89,7 @@ class MysqlIncomeDAO implements IncomeDAO {
         $stmt->bindParam('date_to', $dateTo);
         $stmt->execute();
         $balance = [];
-        while ($balanc = $stmt->fetch (\PDO::FETCH_ASSOC)) {
+        while ($balanc = $stmt->fetch (PDO::FETCH_ASSOC)) {
             $balance[] = $balanc;
         }
         return $balance;
@@ -97,7 +101,7 @@ class MysqlIncomeDAO implements IncomeDAO {
         }
         $dateFrom = date('Y-m-d', mktime(0,0,0,$month, 1, $year));
         $dateTo = date('Y-m-d', mktime(0,0,0,++$month, 1, $year));
-        $stmt = MysqlConnection::$dbh->prepare(
+        $stmt = MySQL::$db->prepare(
                 "select `month`, `year`, SUM(expence) as expence, SUM(income) as income, (SUM(income)+SUM(expence)) as balance, user_id, date, currency, SUM(usdAmount) as usdAmount from ("
                 . "(SELECT 1 as type, MONTH(e.date) as `month`, YEAR(e.date) as `year`, e.amount*-1 as expence, 0 as income, e.user_id, e.date, c.name as currency, (e.amount*rate*-1) as usdAmount "
                 . "from expence e "
@@ -122,14 +126,14 @@ class MysqlIncomeDAO implements IncomeDAO {
         $stmt->bindParam('user_id', $userId);
         $stmt->execute();
         $sumary = [];
-        while ($sum = $stmt->fetch (\PDO::FETCH_ASSOC)) {
+        while ($sum = $stmt->fetch (PDO::FETCH_ASSOC)) {
             $sumary[] = $sum;
         }
         return $sumary;
     }
     
-    public function save(\bablo\model\Income $income) {
-        $stmt = MysqlConnection::$dbh->prepare("INSERT INTO income "
+    public function save(Income $income) {
+        $stmt = MySQL::$db->prepare("INSERT INTO income "
                 . "(date, amount, currency_id, user_id) "
                 . "values "
                 . "(:date, :amount, :currency_id, :user_id)");

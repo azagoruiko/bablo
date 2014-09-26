@@ -3,7 +3,8 @@
         <title>Здесь будет много баблища!!!!111</title>
         <meta charset="utf-8" />
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
-        <script src="js/main.js"></script>
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+        <script src="js/js.js"></script>
     </head>
     <body>
         <div class="container">
@@ -11,12 +12,12 @@
                 <div class="collapse navbar-collapse">
                     <ul class="nav navbar-nav">
                         <li><a href="">Главная</a></li>
-                        <li><a href="?action=showUser">Юзер</a></li>
-                        <li><a href="?action=addIncome">Добавить бабла</a></li>
-                        <li><a href="?action=login">Войти</a></li>
-                        <li><a href="?action=incomes">Бабло</a></li>
-                        <li><a href="?action=expences">Траты</a></li>
-                        <li><a href="?action=balance">Баланс</a></li>
+                        <li><a href="?ctrl=user&action=showUser">Юзер</a></li>
+                        <li><a href="?ctrl=income&action=addIncome">Добавить бабла</a></li>
+                        <li><a href="?ctrl=user&action=login">Войти</a></li>
+                        <li><a href="?ctrl=income&action=incomes">Бабло</a></li>
+                        <li><a href="?ctrl=expence&action=expences">Траты</a></li>
+                        <li><a href="?ctrl=income&action=balance">Баланс</a></li>
                     </ul>
                 </div>
             </nav>

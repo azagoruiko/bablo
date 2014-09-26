@@ -2,6 +2,8 @@
 
 namespace bablo\dao;
 
+use bablo\util\MySQL;
+
 /**
  * Description of MysqlCurrencyDAO
  *
@@ -9,7 +11,7 @@ namespace bablo\dao;
  */
 class MysqlCurrencyDAO implements CurrencyDAO {
     public function findAll() {
-        $stmt = MysqlConnection::$dbh->prepare('SELECT * from currency');
+        $stmt = MySQL::$db->prepare('SELECT * from currency');
         $stmt->execute();
         $currencies = [];
         while (FALSE !== ($obj = $stmt->fetch())) {
