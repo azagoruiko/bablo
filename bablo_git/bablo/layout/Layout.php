@@ -55,7 +55,7 @@ class Layout {
 
     public function render($viewName){
         if ($this->disableLayout) {
-            require "view/$viewName.php";
+            require "view/{$this->ctrlName}/$viewName.php";
         } else {
             $fileName = "layout/{$this->layoutName}.php";
             if (!file_exists($fileName)){

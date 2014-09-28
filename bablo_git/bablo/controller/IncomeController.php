@@ -62,7 +62,8 @@ class IncomeController extends BaseMoneyController {
     }
     
     function getIncomeUpdatesAction() {
-        $this->view->updates = $this->getIncomeService()->getUpdates($this->getUserId(), $this->getRequestParam('since'));
+        $this->getLayout()->setDisableLayout(true);
+        $this->view->updates = $this->getIncomeService()->getUpdates($this->getUserId(), $this->getRequest()->getGetValue('since'));
         return 'income_updates';
     }
 }

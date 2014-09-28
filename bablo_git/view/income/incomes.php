@@ -42,3 +42,4 @@
 <div id="new_content"></div>
 <div>Total USD Amount: <?php echo round($usdAmount,2);?></div>
 <div style="color:red;"><?php echo $this->view->message; ?></div>
+<script src="js/main.js"></script>

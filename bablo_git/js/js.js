@@ -1,4 +1,4 @@
-function someClick (e) {
+/*function someClick (e) {
         console.log($('table').data('attr', 'bye').data('attr'));
     }
     
@@ -22,4 +22,4 @@ $(document).ready( function() {
     });
     
 });
-        
+  */      
