@@ -22,10 +22,12 @@ var ajaxInProgress = false;
 
 function getIncomeUpdates() {
     if (ajaxInProgress) return;
-    $.get('index.php', {action: 'getIncomeUpdates', since: sinceWhen, ctrl: 'income'},
+    $.post('index.php?ctrl=income&action=getIncomeUpdates', {
+            since: sinceWhen,
+            months: $('[name=months]').val()},
         function (data) {
             $('#incomes_table').append(data);
-            sinceWhen = $('#incomes_table tr').last().children().first().text();
+            sinceWhen = findLastId();
         });
     $(document)
             .ajaxStart(function () {ajaxInProgress = true; console.log('start');})
@@ -33,9 +35,28 @@ function getIncomeUpdates() {
     
 }
 
+function findLastId() {
+    var table = $('#incomes_table tr');
+    if (!table) {
+        return -1;
+    } else {
+        var max = 0;
+        table.each( function (i, e) {
+            var el = $(e).children().first();
+            if (Number(el.text()) > max) max = Number(el.text());
+        });
+        return max;
+    }
+}
+
 $().ready(function() {
-    sinceWhen = $('#incomes_table tr').last().children().first().text();
-    setInterval(getIncomeUpdates, 2000);
+    sinceWhen = findLastId();
+    if (sinceWhen != -1) {
+        if (!sinceWhen) {
+            sinceWhen = 0;
+        }
+        setInterval(getIncomeUpdates, 2000);
+    }
     
     $('#addIncome').validate({
         highlight: function (element, cssClass) {

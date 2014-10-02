@@ -6,7 +6,7 @@ class BaseMoneyController extends BaseController {
     use serviceInject\ExpenceServiceTrait;
     
     protected function getSelectedMonth($year, $month) {
-        $selectedMonth = $this->getRequest()->getPostValue('month');
+        $selectedMonth = $this->getRequest()->getPostValue('months');
         if (empty($selectedMonth)) {
             $selectedMonth = implode(',', [$month, $year]);
         }
@@ -27,11 +27,11 @@ class BaseMoneyController extends BaseController {
     }
     
     protected function getSelectedYearMonth() {
-        $month = $this->getRequest()->getPostValue('month');
+        $month = $this->getRequest()->getPostValue('months');
         if (empty($month)) {
             return [null, null];
         } else {
-            return explode(',', $this->getRequest()->getPostValue('month'));
+            return explode(',', $this->getRequest()->getPostValue('months'));
         }
     }
     
