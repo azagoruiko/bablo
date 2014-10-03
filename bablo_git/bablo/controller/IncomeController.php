@@ -70,4 +70,34 @@ class IncomeController extends BaseMoneyController {
                 $dates[0], $dates[1]);
         return 'income_updates';
     }
+    
+    function getIncomeUpdatesJSONAction() {
+        $this->getLayout()->setDisableLayout(true);
+        $dates = $this->getSelectedYearMonth();
+        $this->view->updates = $this->getIncomeService()->getUpdates(
+                $this->getUserId(), 
+                $this->getRequest()->getPostValue('since'),
+                $dates[0], $dates[1]);
+        $maxId = $this->getRequest()->getPostValue('since');
+        foreach ($this->view->updates as $update) {
+            if ($maxId < $update->getId()) {
+                $maxId = $update->getId();
+            }
+        }
+        $this->view->maxId = $maxId;
+        return 'income_updates_json';
+    }
+    
+    function deleteAction() {
+        $this->getLayout()->setDisableLayout(true);
+        $id = $this->getRequest()->getPostValue('id');
+        try {
+            $this->view->result = $this->getIncomeService()->delete($id);
+        } catch (Exception $e) {
+            http_response_code(500);
+            $this->view->result = -1;
+        }
+        
+        return 'income_updates_json';
+    }
 }

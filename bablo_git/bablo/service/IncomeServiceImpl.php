@@ -40,6 +40,10 @@ class IncomeServiceImpl implements IncomeService {
     public function getUpdates($userId = 0, $lastId=0, $month=0, $year=0) {
         return $this->dao->getUpdates($userId, $lastId, $month, $year);
     }
+    
+    function delete($id) {
+        $this->dao->delete($id);
+    }
 
 //put your code here
 }

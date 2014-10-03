@@ -20,7 +20,7 @@
         <th>Amount</th>
         <th>Currency</th>
         <th>USD Amount</th>
-        
+        <td>Actions</td>
         
     </tr>
 <?php
@@ -34,6 +34,7 @@
         . "<td>{$income->getAmount()}</td>"
         . "<td>{$income->getCurrency()}</td>"
         . "<td>\${$curentUsdAmount}</td>"
+        . "<td><button class=\"btn btn-danger\">Delete</button></td>" 
         . "</tr>";
     }
     

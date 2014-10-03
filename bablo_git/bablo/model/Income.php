@@ -6,11 +6,11 @@ namespace bablo\model;
  *
  * @author andrii
  */
-class Income {
+class Income implements \JsonSerializable {
     private $id;
     private $amount;
     private $currency;
-    private $userid;
+    private $user_id;
     private $source;
     private $date;
     private $currency_id;
@@ -50,7 +50,7 @@ class Income {
     }
 
     public function getUserid() {
-        return $this->userid;
+        return $this->user_id;
     }
 
     public function getSource() {
@@ -70,7 +70,7 @@ class Income {
     }
 
     public function setUserid($userid) {
-        $this->userid = $userid;
+        $this->user_id = $userid;
     }
 
     public function setSource($source) {
@@ -80,5 +80,13 @@ class Income {
     public function setDate($date) {
         $this->date = $date;
     }
-    
+
+    public function jsonSerialize() {
+        $obj = [];
+        foreach ($this as $prop => $val) {
+            $obj[$prop] = $val;
+        }
+        return $obj;
+    }
+
 }

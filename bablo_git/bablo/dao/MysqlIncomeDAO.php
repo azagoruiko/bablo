@@ -146,5 +146,11 @@ class MysqlIncomeDAO implements IncomeDAO {
         $stmt->bindParam('currency_id', $income->getCurrency_id());
         return $stmt->execute();
     }
+    
+    function delete($id) {
+        $stmt = MySQL::$db->prepare('delete from income where id=:id');
+        $stmt->bindParam('id', $id);
+        return $stmt->execute();
+    }
 
 }

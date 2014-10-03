@@ -13,4 +13,8 @@ class View {
     function __set($name, $value) {
         $this->storage[$name] = $value;
     }
+    
+    function getRaw() {
+        return $this->storage;
+    }
 }
