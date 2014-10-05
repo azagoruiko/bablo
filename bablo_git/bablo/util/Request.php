@@ -25,4 +25,8 @@ class Request {
     function setSessionValue($name, $value) {
         $_SESSION[$name] = $value;
     }
+    
+    function isAuthorized() {
+        return !empty($this->getSessionValue('id'));
+    }
 }

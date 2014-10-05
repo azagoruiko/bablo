@@ -5,5 +5,13 @@ class Config {
     static $dbpass = 'parol';
     static $dbhost = 'localhost';
     static $dbname = 'bablo';
+    
+    static $authRequiredActions = [
+        'income/*',
+        'expence/*',
+        'currency/*',
+        'user/logout',
+        'user/showUser',
+    ];
 }
 

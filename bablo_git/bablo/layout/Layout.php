@@ -69,4 +69,8 @@ class Layout {
         $fileName = "view/{$this->ctrlName}/{$this->viewName}.php";
         require $fileName;
     }
+    
+    protected function block($name) {
+        require "block/$name.php";
+    }
 }

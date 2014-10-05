@@ -135,6 +135,43 @@ class MysqlIncomeDAO implements IncomeDAO {
         return $sumary;
     }
     
+    public function getAnnualBalance ($userId=0, $year=null){
+        if (empty($month) || empty($year)) {
+            list($month, $year) = explode(',', date('m,Y'));
+        }
+        $dateFrom = date('Y-m-d', mktime(0,0,0,1, 1, $year));
+        $dateTo = date('Y-m-d', mktime(0,0,0,12, 31, $year));
+        $stmt = MySQL::$db->prepare(
+                "select `year`, SUM(expence) as expence, SUM(income) as income, (SUM(income)+SUM(expence)) as balance, user_id, date, currency, SUM(usdAmount) as usdAmount from ("
+                . "(SELECT 1 as type, YEAR(e.date) as `year`, e.amount*-1 as expence, 0 as income, e.user_id, e.date, c.name as currency, (e.amount*rate*-1) as usdAmount "
+                . "from expence e "
+                . "join currency c "
+                ."on e.currency_id=c.id "
+                . "join rate r "
+                . "on r.id=c.id and r.date=(select MAX(rate.date) as d from rate) "
+                . "where e.user_id=:user_id)"
+                
+                ."UNION "
+
+                . "(SELECT 0 as type, YEAR(i.date) as `year`, 0 as expence, i.amount as income, i.user_id, i.date, c.name as currency, (i.amount*rate) as usdAmount "
+                . "from income i "
+                . "join currency c "
+                . "on i.currency_id=c.id "
+                . "join rate r "
+                . "on r.id=c.id and r.date=(select MAX(rate.date) as d from rate) "
+                . "where i.user_id=:user_id)"
+                . ") as balanceTable "
+                . "group by year"
+                );
+        $stmt->bindParam('user_id', $userId);
+        $stmt->execute();
+        $sumary = [];
+        while ($sum = $stmt->fetch (PDO::FETCH_ASSOC)) {
+            $sumary[] = $sum;
+        }
+        return $sumary;
+    }
+    
     public function save(Income $income) {
         $stmt = MySQL::$db->prepare("INSERT INTO income "
                 . "(date, amount, currency_id, user_id) "

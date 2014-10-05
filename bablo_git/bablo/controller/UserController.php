@@ -36,13 +36,19 @@ class UserController extends BaseController {
         }
         else if (FALSE !== ($this->view->user = $this->getUserService()->authorize($name, $pass))) {
             $this->getRequest()->setSessionValue('id', $this->view->user->getId());
-            return 'showUser';
+            return 'index_auth';
         } else {
             $this->view->error = "Login failed! You're a hacker!";
             return 'login';
         }
     }
+    
     function indexAction() {
+        return $this->isAuthorized() ? 'index_auth' : 'index';
+    }
+    
+    function logoutAction() {
+        $this->getRequest()->setSessionValue('id', NULL);
         return 'index';
     }
 }

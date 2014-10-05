@@ -33,4 +33,13 @@ class ExpenceController extends BaseMoneyController {
         return 'expences';
     }
     
+    function monthlyExpenceAction() {
+        sleep(3);
+        $this->getLayout()->setDisableLayout(true);
+        $month = date("m");
+        $year = date("Y");
+        $this->view->updates = $this->getExpenceService()->findAll($this->getUserId(), $month, $year);
+        return 'income_updates_json';
+    }
+    
 }

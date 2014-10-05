@@ -9,14 +9,6 @@
                 <input required class="form-control"  type="text" name="amount" />
             </div>
             <div class="input-group">
-                <label for="email">Email:</label>
-                <input required type="email" class="form-control"  type="text" name="name" />
-            </div>
-            <div class="input-group">
-                <label for="url">URL:</label>
-                <input required type="url" class="form-control"  type="text" name="url" />
-            </div>
-            <div class="input-group">
                 <div>Currency:</div><select class="form-control"  name="currency_id">
                     <?php
                     foreach ($this->view->currencies as $c) {

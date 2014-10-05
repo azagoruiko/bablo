@@ -44,6 +44,10 @@ class IncomeServiceImpl implements IncomeService {
     function delete($id) {
         $this->dao->delete($id);
     }
+    
+    function getAnnualBalance ($userId=0, $year=null) {
+        return $this->dao->getAnnualBalance($userId, $year);
+    }
 
 //put your code here
 }

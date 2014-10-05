@@ -7,9 +7,9 @@ class IncomeController extends BaseMoneyController {
     use serviceInject\CurrencyServiceTrait;
     use serviceInject\IncomeServiceTrait;
     
-    function addIncomeAction($add = true) {
+    function addIncomeAction() {
         $income = new Income();
-        if ($add) {
+        if ($this->getRequest()->isPost()) {
             $income->setAmount($this->getRequest()->getPostValue('amount'));
             $income->setCurrency_id($this->getRequest()->getPostValue('currency_id'));
             $income->setDate($this->getRequest()->getPostValue('date'));
@@ -97,6 +97,25 @@ class IncomeController extends BaseMoneyController {
             http_response_code(500);
             $this->view->result = -1;
         }
+        
+        return 'income_updates_json';
+    }
+    
+    function monthlyIncomeAction() {
+        $this->getLayout()->setDisableLayout(true);
+        $month = date("m");
+        $year = date("Y");
+        $this->view->updates = $this->getIncomeService()->getUpdates(
+                $this->getUserId(), 
+                0,
+                $month, $year);
+        return 'income_updates_json';
+    }
+    
+    function annualBalanceAction() {
+        $this->getLayout()->setDisableLayout(true);
+        $year = date("Y");
+        $this->view->updates = $this->getIncomeService()->getAnnualBalance ($this->getUserId(), $year);
         
         return 'income_updates_json';
     }

@@ -16,6 +16,10 @@ class BaseController {
      */
     protected $layout;
     
+    protected function isAuthorized() {
+        return $this->getRequest()->isAuthorized();
+    }
+    
     public function getLayout() {
         return $this->layout;
     }

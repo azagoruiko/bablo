@@ -18,6 +18,19 @@ class FrontController {
         if (empty($ctrlName)) {
             $ctrlName = 'user';
         }
+        
+        $action = $r->getGetValue('action');
+        if (empty($action)) {
+            $action = 'index';
+        }
+        
+        if (!$r->isAuthorized() && (
+                in_array("$ctrlName/$action", \Config::$authRequiredActions)
+                || in_array("$ctrlName/*", \Config::$authRequiredActions))) {
+            $ctrlName = 'user';
+            $action = 'index';
+        }
+        
         switch ($ctrlName) {
             case 'user':
                 $ctrl = new UserController($this->view);
@@ -28,13 +41,13 @@ class FrontController {
             case 'expence':
                 $ctrl = new ExpenceController($this->view);
                 break;
+            case 'currency':
+                $ctrl = new CurrencyController($this->view);
+                break;
             default:
                 http_response_code(404);
         }
-        $action = $r->getGetValue('action');
-        if (empty($action)) {
-            $action = 'index';
-        }
+        
         $layOut = new \bablo\layout\Layout();
         $ctrl->setLayout($layOut);
         

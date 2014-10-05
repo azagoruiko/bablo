@@ -20,4 +20,5 @@ interface IncomeService {
     function find($id);
     public function getUpdates($userId=0, $lastId=0, $month=0, $year=0);
     function delete($id);
+    function getAnnualBalance ($userId=0, $year=null);
 }
