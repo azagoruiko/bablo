@@ -8,7 +8,9 @@
 </div>
 
 <div class="jumbotron">
-    <h1>Главная страница</h1>
+    <div id="graph-box">
+        <canvas id="graph" style="border: solid black 1px; width: 100%; height: 300px;"></canvas>
+    </div>
 </div>
 <div class="row">
     <div class="col-md-4">
@@ -104,3 +106,4 @@
         }, 3000);
     });
 </script>
+<script src="js/graph.js"></script>

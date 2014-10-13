@@ -16,4 +16,5 @@ interface IncomeDAO extends DAO{
     function getUpdates($userId=0, $lastId=0);
     function delete($id);
     function getAnnualBalance ($userId=0, $year=null);
+    function getRevenueBrokenByMonth ($userId=0, $month='', $year='');
 }

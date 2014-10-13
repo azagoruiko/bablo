@@ -119,4 +119,11 @@ class IncomeController extends BaseMoneyController {
         
         return 'income_updates_json';
     }
+    
+    function revenue12MonthsAction() {
+        $this->getLayout()->setDisableLayout(true);
+        $this->view->revenue = $this->getIncomeService()->getRevenueBrokenByMonth ($this->getUserId());
+        
+        return 'income_updates_json';
+    }
 }

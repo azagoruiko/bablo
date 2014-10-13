@@ -172,6 +172,46 @@ class MysqlIncomeDAO implements IncomeDAO {
         return $sumary;
     }
     
+    public function getRevenueBrokenByMonth ($userId=0, $month='', $year=''){
+        if (empty($month) || empty($year)) {
+            list($month, $year) = explode(',', date('m,Y'));
+            $year--;
+        }
+        $dateFrom = date('Y-m-d', mktime(0,0,0,1, $month, $year));
+        $stmt = MySQL::$db->prepare(
+                "select `month`, `year`, SUM(expence) as expence, SUM(income) as income, (SUM(income)+SUM(expence)) as balance, user_id, date, currency, SUM(usdAmount) as usdAmount from ("
+                . "(SELECT 1 as type, MONTH(e.date) as `month`, YEAR(e.date) as `year`, e.amount*-1 as expence, 0 as income, e.user_id, e.date, c.name as currency, (e.amount*rate*-1) as usdAmount "
+                . "from expence e "
+                . "join currency c "
+                ."on e.currency_id=c.id "
+                . "join rate r "
+                . "on r.id=c.id and r.date=(select MAX(rate.date) as d from rate) "
+                . "where e.user_id=:user_id "
+                . "and e.date > :date) "
+                
+                ."UNION "
+
+                . "(SELECT 0 as type, MONTH(i.date) as `month`, YEAR(i.date) as `year`, 0 as expence, i.amount as income, i.user_id, i.date, c.name as currency, (i.amount*rate) as usdAmount "
+                . "from income i "
+                . "join currency c "
+                . "on i.currency_id=c.id "
+                . "join rate r "
+                . "on r.id=c.id and r.date=(select MAX(rate.date) as d from rate) "
+                . "where i.user_id=:user_id "
+                . "and i.date > :date) "
+                . ") as balanceTable "
+                . "group by `month`, `year` order by year DESC, month DESC limit 12"
+                );
+        $stmt->bindParam('user_id', $userId);
+        $stmt->bindParam('date', $dateFrom);
+        $stmt->execute();
+        $sumary = [];
+        while ($sum = $stmt->fetch (PDO::FETCH_ASSOC)) {
+            $sumary[] = $sum;
+        }
+        return $sumary;
+    }
+    
     public function save(Income $income) {
         $stmt = MySQL::$db->prepare("INSERT INTO income "
                 . "(date, amount, currency_id, user_id) "

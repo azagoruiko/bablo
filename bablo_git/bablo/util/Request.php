@@ -19,7 +19,7 @@ class Request {
     }
     
     function getSessionValue($name) {
-        return $_SESSION[$name];
+        return isset($_SESSION[$name]) ? $_SESSION[$name] : '';
     }
     
     function setSessionValue($name, $value) {

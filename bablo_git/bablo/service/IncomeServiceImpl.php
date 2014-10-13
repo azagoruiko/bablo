@@ -49,5 +49,9 @@ class IncomeServiceImpl implements IncomeService {
         return $this->dao->getAnnualBalance($userId, $year);
     }
 
+    public function getRevenueBrokenByMonth($userId = 0, $month = '', $year = '') {
+        return $this->dao->getRevenueBrokenByMonth($userId, $month, $year);
+    }
+
 //put your code here
 }
